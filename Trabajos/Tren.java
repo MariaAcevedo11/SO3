@@ -28,8 +28,8 @@ class Tren extends Robot implements Runnable, Directions {
     }
 
     public void run() {
-       salirDelT();
-
+        salirDelT();
+        
 
     }
     public void turnRight(){
@@ -45,12 +45,15 @@ class Tren extends Robot implements Runnable, Directions {
         }
         if (this.ruta.equals("rutaAE")){
             System.out.println("2");
-            irAE(); 
+            irAE();
+            rutaA();  
 
         }
         if (this.ruta.equals("rutaASJ")){
             System.out.println("3");
             irASJ(); 
+            irASA(); 
+             
 
         }
     }
@@ -78,7 +81,7 @@ class Tren extends Robot implements Runnable, Directions {
             moverActualizandoCoord();
         
         }
-        System.out.println("ESTOY ACA MY H");
+        
         goToIPosition(); //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
             
     }
@@ -104,7 +107,6 @@ class Tren extends Robot implements Runnable, Directions {
         }
         if (tin.mapa[fila][columna] == 1){ //tin es lo que me permite acceder al mapa que está en control, lo pongo de atributo. 
             fila = filaAntes; 
-            System.out.println("holii");
             columna = columnaAntes; 
         }
         else {
@@ -113,12 +115,10 @@ class Tren extends Robot implements Runnable, Directions {
             move(); //siempre que movamos el robot con este metodo (moverActualizandoCoord) tendremos las coordenadas del hp 
 
         }
-
-         
-        
         
                 
     }
+
     public void irAN(){
 
         while (columna != 19 || fila != 35 ){
@@ -272,6 +272,65 @@ class Tren extends Robot implements Runnable, Directions {
         turnLeft();
         turnLeft(); //Debe girar 180 grados porque san antonio no tiene devuelta. 
     }
+    public void rutaA(){
+
+        while (columna != 19 || fila != 35 && tin.son420 == true){
+            
+            if (columna == 13 && fila == 1){
+                turnLeft(); 
+            }
+            if (columna == 13 && fila == 4){
+                turnRight();
+            }
+            if (columna == 14 && fila == 4){
+                turnLeft(); 
+            }
+            if (columna == 14 && fila == 10){
+                turnRight(); 
+            }
+            if (columna == 17 && fila == 10){
+                turnLeft(); 
+            }
+            if (columna == 17 && fila == 19){
+                turnLeft(); 
+            }
+            if (columna == 12 && fila == 19){
+                turnRight(); 
+            }
+            if (columna == 12 && fila == 22){
+                turnRight(); 
+            }
+            if (columna == 14 && fila == 22){
+                turnLeft(); 
+            }
+            if (columna == 14 && fila == 25){
+                turnRight(); 
+            }
+            if (columna == 16 && fila == 25){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 28){
+                turnRight(); 
+            }
+            if (columna == 17 && fila == 28){
+                turnLeft(); 
+            }
+            if (columna == 17 && fila == 34){
+                turnRight(); 
+            }
+            if (columna == 20 && fila == 34){
+                turnLeft(); 
+            }
+            if (columna == 20 && fila == 35){
+                turnLeft(); 
+            }
+            moverActualizandoCoord(); 
+
+            //Hasta aquí llega de estrella a niquia, falta code de ruta completa
+
+        }
+    }
+
 }
 
 

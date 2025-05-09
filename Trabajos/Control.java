@@ -10,6 +10,8 @@ public class Control implements Directions {
     public ArrayList<Tren> metrosA = new ArrayList<>();
     public ArrayList<Tren> metrosB = new ArrayList<>();
     public int[][] mapa = new int[36][21]; 
+    public boolean son11; 
+    public boolean son420;
 
     public Control(){
 
@@ -18,6 +20,7 @@ public class Control implements Directions {
         int posFila = 34; 
         Direction tipoDireccion = Directions.North;
         int contador = 0; 
+         
         
 
         //Creación de robots con tipo de dirección respectivo en el taller
