@@ -1,21 +1,32 @@
-import Trabajos.Control;
+package Trabajos;
+
 import kareltherobot.*;
-import java.awt.Color;
-import java.util.ArrayList;
 
-public class main { 
-public static void main(String[] args) {
-    World.readWorld("MetroMed.kwld");
-    World.setVisible(true); 
-    World.setDelay(0);                         
+public class main {
+    public static void main(String[] args) {
+        // Cargar mundo Karel
+        World.readWorld("MetroMed.kwld");
+        World.setVisible(true);
+        World.setDelay(0);
 
-    Control control = new Control(); 
-    World.setDelay(50); 
-     // Crear un nuevo hilo para el robot
-     new Thread(control.metrosA.getLast()).start();
-     new Thread(control.metrosA.get(control.metrosA.size() - 2)).start(); //Este está generando problemas a la hora de salir del taller
-     new Thread(control.metrosB.getLast()).start();
+        // Inicializar componentes principales
+        MapaConcurrencia mapa = new MapaConcurrencia(36, 21);
+        SanAntonioB sanAntonioB = new SanAntonioB();
+        LineaC lineaC = new LineaC();
+        RelojVirtual reloj = new RelojVirtual();
+        Control control = new Control();
+        AdministradorDeTaller admin = new AdministradorDeTaller(control, reloj, mapa, sanAntonioB, lineaC);
 
-    
+        // Iniciar trenes que salen del taller a las estaciones
+        admin.lanzarPrimerosTrenes();
+
+        // Monitorear la activación del cierre y enviar últimos trenes
+        admin.monitorearCierreYEnviarUltimosTrenes();
+
+        // Iniciar el reloj virtual
+        reloj.start();
+
+        // Escuchar señal de cierre desde teclado
+        CierreManager.escucharPorTeclado();
     }
 }

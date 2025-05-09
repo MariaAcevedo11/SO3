@@ -1,284 +1,181 @@
 package Trabajos;
+
 import kareltherobot.*;
 import java.awt.Color;
-import java.util.ArrayList; 
+import java.util.List;
 
-// Clase personalizada de robot que corre en su propio hilo
-class Tren extends Robot implements Runnable, Directions {
-    
-    
-    int columna; 
-    int fila;
-    String ruta; 
-    Control tin; 
+public class Tren extends Robot implements Runnable, Directions {
+    private final String rutaNombre;
+    private MapaConcurrencia mapa;
+    private List<Coordenada> ruta;
+    private SanAntonioB sanAntonioBControl;
+    private LineaC lineaC;
+    private RelojVirtual reloj;
 
-    public Tren(int street, int avenue, Direction direction, int beeps, Color color, String ruta, Control tin) {
-        super(street, avenue, direction, beeps, color);
-        this.columna = avenue; 
+    private int fila, columna;
+    private boolean asignado = false;
+
+    public Tren(int street, int avenue, Direction dir, int beeps, Color color,
+                String rutaNombre, Control control) {
+        super(street, avenue, dir, beeps, color);
         this.fila = street;
-        this.ruta = ruta; 
-        this.tin = tin; 
-
+        this.columna = avenue;
+        this.rutaNombre = rutaNombre;
         World.setupThread(this);
     }
 
-    // Movimiento que hará el robot
-    public void race() {
-
+    public String getRutaNombre() {
+        return rutaNombre;
     }
 
-    public void run() {
-       salirDelT();
-
-
+    public boolean isAsignado() {
+        return asignado;
     }
-    public void turnRight(){
-        turnLeft(); 
-        turnLeft(); 
+
+    public void asignar(MapaConcurrencia mapa, SanAntonioB sanAntonioB,
+                        LineaC lineaC, RelojVirtual reloj) {
+        this.mapa = mapa;
+        this.sanAntonioBControl = sanAntonioB;
+        this.lineaC = lineaC;
+        this.reloj = reloj;
+        this.ruta = RutaFactory.getRuta(rutaNombre);
+        this.asignado = true;
+    }
+
+//    public void avanzarHacia(Coordenada destino) {
+//        while (fila != destino.fila || columna != destino.columna) {
+//            if (fila < destino.fila && !facingNorth()) faceNorth();
+//            else if (fila > destino.fila && !facingSouth()) faceSouth();
+//            else if (columna < destino.columna && !facingEast()) faceEast();
+//            else if (columna > destino.columna && !facingWest()) faceWest();
+//
+//            moverSeguro();
+//        }
+//    }
+
+    public void esperarHastaHora(int hora, int minuto) {
+        while (reloj.getHora() < hora || (reloj.getHora() == hora && reloj.getMinuto() < minuto)) {
+            dormir(500); // revisa cada 0.5s
+        }
+    }
+
+
+    public void iniciarRuta() {
+        run(); // simplemente delega al método original
+    }
+
+    public void volverAlTaller() {
+        System.out.println("🏁 Tren " + rutaNombre + " iniciando regreso al taller.");
+
+        List<Coordenada> vuelta = RutaFactory.getRutaDeVueltaAlTaller(new Coordenada(fila, columna));
+        for (Coordenada paso : vuelta) {
+            avanzarHacia(paso);
+        }
+
+        System.out.println("🏁 Tren " + rutaNombre + " llegó al taller. Fin del día.");
+    }
+
+
+    public void avanzarHacia(Coordenada destino) {
+
+        if (CierreManager.isCierreActivo() && esEstacionFinal(destino)) {
+            System.out.println("🚧 Tren " + rutaNombre + " llegó a estación final tras cierre. Terminando ruta.");
+            return;
+        }
+
+
+        while (fila != destino.fila || columna != destino.columna) {
+            if (fila < destino.fila && !facingNorth()) faceNorth();
+            else if (fila > destino.fila && !facingSouth()) faceSouth();
+            else if (columna < destino.columna && !facingEast()) faceEast();
+            else if (columna > destino.columna && !facingWest()) faceWest();
+
+            moverSeguro();
+        }
+
+        if (esSanAntonioB(destino)) {
+            sanAntonioBControl.entrar(rutaNombre);
+            esperarEnEstacion();
+            girar180();
+            sanAntonioBControl.salir(rutaNombre);
+        } else if (esEstacion(destino)) {
+            esperarEnEstacion();
+        }
+
+        if (esEstacionFinal(destino) && reloj.getHora() >= 23) {
+            System.out.println("🛑 Tren " + rutaNombre + " llegó a estación final tras cierre. Terminando ruta.");
+        }
+    }
+
+    private void moverSeguro() {
+        int nuevaFila = fila;
+        int nuevaColumna = columna;
+
+        if (facingNorth()) nuevaFila++;
+        else if (facingSouth()) nuevaFila--;
+        else if (facingEast()) nuevaColumna++;
+        else if (facingWest()) nuevaColumna--;
+
+        Coordenada nueva = new Coordenada(nuevaFila, nuevaColumna);
+
+        CruceManager.entrarCruce(nueva);
+        boolean pudoOcupar = mapa.ocupar(nuevaFila, nuevaColumna);
+        if (pudoOcupar) {
+            mapa.liberar(fila, columna);
+            fila = nuevaFila;
+            columna = nuevaColumna;
+            move();
+        } else {
+            dormir(50); // no pudo ocupar, espera
+        }
+        CruceManager.salirCruce(nueva); // liberar aunque no se haya movido
+    }
+
+
+
+    private void esperarEnEstacion() {
+        System.out.println("🕒 Tren " + rutaNombre + " esperando en estación (" + fila + "," + columna + ")");
+        dormir(3000);
+    }
+
+    private void dormir(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    // Usa el manager central de estaciones para reglas definidas
+    private boolean esEstacion(Coordenada c) {
+        return EstacionManager.esEstacion(c);
+    }
+
+    private boolean esSanAntonioB(Coordenada c) {
+        return EstacionManager.esSanAntonioB(c);
+    }
+
+    private boolean esEstacionFinal(Coordenada c) {
+        return EstacionManager.esLaEstrella(c) ||
+                EstacionManager.esSanJavier(c) ||
+                EstacionManager.esNiquia(c);
+    }
+
+    private boolean esEntradaLineaC(Coordenada c) {
+        return c.columna == 14 && c.fila == 26;
+    }
+
+    private boolean esSalidaLineaC(Coordenada c) {
+        return c.columna == 13 && c.fila == 23;
+    }
+
+    private void girar180() {
+        turnLeft();
         turnLeft();
     }
 
-    public void goToIPosition(){
-        if (this.ruta.equals("rutaAN")){
-            System.out.println("1");
-            irAN(); 
-        }
-        if (this.ruta.equals("rutaAE")){
-            System.out.println("2");
-            irAE(); 
-
-        }
-        if (this.ruta.equals("rutaASJ")){
-            System.out.println("3");
-            irASJ(); 
-
-        }
-    }
-     
-
-    public void salirDelT(){ //avenida = columna, calle = fila
-        
-        while (columna != 16 || fila != 32 ){
-            
-            if (columna == 15 && fila == 35 && !facingEast()){ //El facing dice que se gire el hp si es que ya no está mirando donde debería
-                turnLeft(); 
-            }
-            if (columna == 1 && fila == 35 && !facingSouth()){
-                turnLeft(); 
-            }
-            if (columna == 1 && fila == 34 && !facingWest()){
-                turnLeft(); 
-            }
-            if (columna == 14 && fila == 34 && !facingSouth()){
-                turnRight(); 
-            }
-            if (columna == 14 && fila == 32 && !facingEast()){
-                turnLeft(); 
-            }  
-            moverActualizandoCoord();
-        
-        }
-        System.out.println("ESTOY ACA MY H");
-        goToIPosition(); //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
-            
-    }
-
-    public void moverActualizandoCoord(){
-        int filaAntes = fila; 
-        int columnaAntes = columna;  
-        
-
-        
-        if (facingNorth()) {
-            fila++;
-        }
-        else if (facingSouth()) {
-            fila--;
-        }
-        else if (facingEast()) {
-            columna++;
-        }
-        else if (facingWest()) {
-            columna--;
-            
-        }
-        if (tin.mapa[fila][columna] == 1){ //tin es lo que me permite acceder al mapa que está en control, lo pongo de atributo. 
-            fila = filaAntes; 
-            System.out.println("holii");
-            columna = columnaAntes; 
-        }
-        else {
-            tin.mapa[filaAntes][columnaAntes] = 0; //Desocupa la posición anterior del hp
-            tin.mapa[fila][columna] = 1; //Marca la nueva posición del hp como ocupada
-            move(); //siempre que movamos el robot con este metodo (moverActualizandoCoord) tendremos las coordenadas del hp 
-
-        }
-
-         
-        
-        
-                
-    }
-    public void irAN(){
-
-        while (columna != 19 || fila != 35 ){
-            
-            if (columna == 17 && fila == 32){
-                turnLeft(); 
-            }
-            if (columna == 17 && fila == 34){
-                turnRight(); 
-            }
-            if (columna == 20 && fila == 34){
-                turnLeft(); 
-            }
-            if (columna == 20 && fila == 35){
-                turnLeft(); 
-            }
-
-            moverActualizandoCoord();
-
-        }
-
-    }
-    public void irAE(){
-
-        while(columna != 11 || fila != 1 ){
-
-            if (columna == 16 && fila == 32){
-                turnRight(); 
-            }
-            if (columna == 16 && fila == 29){
-                turnRight(); 
-            }
-            if (columna == 15 && fila == 29){
-                turnLeft(); 
-            }
-            if (columna == 15 && fila == 26){
-                turnRight(); 
-            }
-            if (columna == 13 && fila == 26){
-                turnLeft(); 
-            }
-            if (columna == 13 && fila == 23){
-                turnRight(); 
-            }
-            if (columna == 11 && fila == 23){
-                turnLeft(); 
-            }
-            if (columna == 11 && fila == 18){
-                turnLeft(); 
-            }
-            if (columna == 16 && fila == 18){
-                turnRight(); 
-            }
-            if (columna == 16 && fila == 11){
-                turnRight(); 
-            }
-            if (columna == 13 && fila == 11){
-                turnLeft(); 
-            }
-            if (columna == 13 && fila == 5){
-                turnRight(); 
-            }
-            if (columna == 12 && fila == 5){
-                turnLeft(); 
-            }
-            if (columna == 12 && fila == 2){
-                turnRight(); 
-            }
-            if (columna == 10 && fila == 2){
-                turnLeft(); 
-            }
-            if (columna == 10 && fila == 1){
-                turnLeft(); 
-            }
-
-            moverActualizandoCoord();
-
-        }
-
-    }
-    public void irASJ(){
-        while (columna != 1 || fila != 16 ){
-            
-            if (columna == 16 && fila == 32){
-                turnRight(); 
-            }
-            if (columna == 16 && fila == 29){
-                turnRight(); 
-            }
-            if (columna == 15 && fila == 29){
-                turnLeft(); 
-            }
-            if (columna == 15 && fila == 26){
-                turnRight(); 
-            }
-            if (columna == 13 && fila == 26){
-                turnLeft(); 
-            }
-            if (columna == 13 && fila == 23){
-                turnRight(); 
-            }
-            if (columna == 11 && fila == 23){
-                turnLeft(); 
-            }
-            if (columna == 11 && fila == 14){
-                turnRight();
-            }
-            if (columna == 7 && fila == 14){
-                turnRight();
-            }
-            if (columna == 7 && fila == 15){
-                turnLeft();
-            }
-            if (columna == 2 && fila == 15){
-                turnRight();
-            }
-            if (columna == 2 && fila == 17){
-                turnLeft();
-            }
-            if (columna == 1 && fila == 17){
-                turnLeft();
-            }
-
-            moverActualizandoCoord();
-
-        }
-
-    }
-    public void irASA(){
-
-        while(columna != 15 || fila != 14){
-            
-            if (columna == 1 && fila == 14){
-                turnLeft(); 
-            }
-            if (columna == 6 && fila == 14){
-                turnRight(); 
-            }
-            if (columna == 6 && fila == 13){
-                turnLeft(); 
-            }
-            if (columna == 14 && fila == 13){
-                turnLeft(); 
-            }
-            if (columna == 14 && fila == 14){
-                turnRight(); 
-            }
-            moverActualizandoCoord(); 
-
-        }
-        turnLeft();
-        turnLeft(); //Debe girar 180 grados porque san antonio no tiene devuelta. 
-    }
+    private void faceNorth() { while (!facingNorth()) turnLeft(); }
+    private void faceSouth() { while (!facingSouth()) turnLeft(); }
+    private void faceEast()  { while (!facingEast())  turnLeft(); }
+    private void faceWest()  { while (!facingWest())  turnLeft(); }
 }
-
-
-
-
-
-
-
-
-
