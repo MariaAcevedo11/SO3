@@ -65,7 +65,6 @@ class Tren extends Robot implements Runnable, Directions {
         }
     }
      
-
     public void salirDelT(){ //avenida = columna, calle = fila
         
         while (columna != 16 || fila != 32 ){
@@ -459,8 +458,34 @@ class Tren extends Robot implements Runnable, Directions {
                     e.printStackTrace();
                 }
         }
+       if (columna == 12 && fila == 13) {
+            tin.blockCisneros.lock();
+            try {
+                if (tin.enSanancho) {
+                    try {
+                        tin.condicion.await();  // Espera mientras alguien está en Sanancho
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Buena práctica
+                    }
+                } else {
+                    tin.enSanancho = true; // Ocupa el recurso
+                }
+            } finally {
+                tin.blockCisneros.unlock(); // Siempre liberar el lock
+            }
+        }
+        if (columna == 15 && fila == 14){
+                tin.blockCisneros.lock();
+                try {
+                    tin.enSanancho = false;     // Libera el recurso
+                    tin.condicion.signal();     // Despierta a un hilo esperando
+                } finally {
+                    tin.blockCisneros.unlock();
+            }
+        }
     }
 }
+
 
 
 

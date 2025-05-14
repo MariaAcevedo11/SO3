@@ -2,7 +2,9 @@ package Trabajos;
 import java.util.ArrayList;
 import kareltherobot.*;
 import java.awt.Color;
-import java.util.concurrent.locks.ReentrantLock; 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Condition;
 
 
 
@@ -11,10 +13,14 @@ public class Control implements Directions {
     public ArrayList<Tren> metrosA = new ArrayList<>();
     public ArrayList<Tren> metrosB = new ArrayList<>();
     public ArrayList<Tren> enTaller = new ArrayList<>();
-    public final ReentrantLock block = new ReentrantLock();
+    public final ReentrantLock block = new ReentrantLock(); //pa moverse
+    
+    public final ReentrantLock blockCisneros = new ReentrantLock(); //pa cisneros 
+    public final Condition condicion = blockCisneros.newCondition();
     volatile public int[][] mapa = new int[36][21];  
     public boolean son11 = false; 
-    public boolean son420 = false;  
+    public boolean son420 = false; 
+    public boolean enSanancho = false;  
 
     public Control(){
     
