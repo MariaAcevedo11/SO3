@@ -39,32 +39,36 @@ class Tren extends Robot implements Runnable, Directions {
 
         if (this.ruta.equals("rutaAN")){
             irAN();
+                while (!tin.son420){  
+                }
+                while (tin.son420){
 
-            while(tin.son420 == true || tin.son11 == false){
-                rutaAE();
-                rutaAN(); 
-            } 
+                    rutaAE();
+                    rutaAN(); 
+                }
         }
 
         if (this.ruta.equals("rutaAE")){
             irAE();
-            while(tin.son420 == true || tin.son11 == false){
-                rutaAN();
-                rutaAE();
-            }  
+                while (!tin.son420){  
+                }
 
+                while(tin.son420){
+                    rutaAN(); 
+                    rutaAE();
+                }
         }
         if (this.ruta.equals("rutaASJ")){
             irASJ(); 
-            
-            System.out.print(tin.enTaller.size());
-            while(tin.son420 == true || tin.son11 == false){
-                rutaASA(); 
-                rutaASJ(); 
-            } 
+                while (!tin.son420){  
+                }
+                while(tin.son420){ 
+                    rutaASA();
+                    rutaASJ();
+                }
+ 
         }
     }
-     
     public void salirDelT(){ //avenida = columna, calle = fila
         
         while (columna != 16 || fila != 32 ){
@@ -128,23 +132,6 @@ class Tren extends Robot implements Runnable, Directions {
         tin.block.unlock();
         
                 
-    }
-    public void queHoraEs(){
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Qué hora es bro?");
-        String hora = input.next(); 
-
-        if (hora.equals("420") || hora.equals("4:20")){
-            tin.son420 = true; 
-            tin.son11 = false;
-        } else if (hora.equals("11") || hora.equals("11:00")){
-            tin.son11 = true; 
-            tin.son420 = false; 
-        } else {
-            System.out.println("La hora no es válida");
-        }
-
     }
     public void irAN(){
 
@@ -395,52 +382,52 @@ class Tren extends Robot implements Runnable, Directions {
 
             waitBro(); 
 
-            if (columna == 16 && fila == 35){
+            if (columna == 16 && fila == 35 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 16 && fila == 29){
+            if (columna == 16 && fila == 29 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 15 && fila == 29){
+            if (columna == 15 && fila == 29 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 15 && fila == 26){
+            if (columna == 15 && fila == 26 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 13 && fila == 26){
+            if (columna == 13 && fila == 26 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 23){
+            if (columna == 13 && fila == 23 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 11 && fila == 23){
+            if (columna == 11 && fila == 23 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 11 && fila == 18){
+            if (columna == 11 && fila == 18 && !facingEast()){
                 turnLeft(); 
             }
-            if (columna == 16 && fila == 18){
+            if (columna == 16 && fila == 18 && !facingSouth()){
                 turnRight(); 
             }
-            if (columna == 16 && fila == 11){
+            if (columna == 16 && fila == 11 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 13 && fila == 11){
+            if (columna == 13 && fila == 11 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 5){
+            if (columna == 13 && fila == 5 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 12 && fila == 5){
+            if (columna == 12 && fila == 5 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 12 && fila == 2){
+            if (columna == 12 && fila == 2 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 10 && fila == 2){
+            if (columna == 10 && fila == 2 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 10 && fila == 1){
+            if (columna == 10 && fila == 1 && !facingEast()){
                 turnLeft(); 
             }
 

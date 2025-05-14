@@ -14,13 +14,13 @@ public class Control implements Directions {
     public ArrayList<Tren> metrosB = new ArrayList<>();
     public ArrayList<Tren> enTaller = new ArrayList<>();
     public final ReentrantLock block = new ReentrantLock(); //pa moverse
-    
+
     public final ReentrantLock blockCisneros = new ReentrantLock(); //pa cisneros 
     public final Condition condicion = blockCisneros.newCondition();
     volatile public int[][] mapa = new int[36][21];  
-    public boolean son11 = false; 
-    public boolean son420 = false; 
-    public boolean enSanancho = false;  
+    volatile public boolean son11 = false; 
+    volatile public boolean son420 = false; 
+    volatile public boolean enSanancho = false;  
 
     public Control(){
     
