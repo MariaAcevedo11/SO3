@@ -2,6 +2,8 @@ package Trabajos;
 import kareltherobot.*;
 import java.awt.Color;
 import java.util.ArrayList; 
+import java.util.Scanner;
+ 
 
 // Clase personalizada de robot que corre en su propio hilo
 class Tren extends Robot implements Runnable, Directions {
@@ -11,6 +13,7 @@ class Tren extends Robot implements Runnable, Directions {
     int fila;
     String ruta; 
     Control tin; 
+    
 
     public Tren(int street, int avenue, Direction direction, int beeps, Color color, String ruta, Control tin) {
         super(street, avenue, direction, beeps, color);
@@ -22,14 +25,8 @@ class Tren extends Robot implements Runnable, Directions {
         World.setupThread(this);
     }
 
-    // Movimiento que hará el robot
-    public void race() {
-
-    }
-
     public void run() {
         salirDelT();
-        
 
     }
     public void turnRight(){
@@ -39,22 +36,31 @@ class Tren extends Robot implements Runnable, Directions {
     }
 
     public void goToIPosition(){
+
         if (this.ruta.equals("rutaAN")){
-            System.out.println("1");
             irAN(); 
+
+            while(tin.son420 == true || tin.son11 == false){
+                rutaAE();
+                rutaAN(); 
+            } 
         }
+
         if (this.ruta.equals("rutaAE")){
-            System.out.println("2");
             irAE();
-            rutaA();  
+            while(tin.son420 == true || tin.son11 == false){
+                rutaAN();
+                rutaAE();
+            }  
 
         }
         if (this.ruta.equals("rutaASJ")){
-            System.out.println("3");
             irASJ(); 
-            irASA(); 
-             
-
+            System.out.println("HOLA3");
+            while(tin.son420 == true || tin.son11 == false){
+                rutaASA(); 
+                rutaASJ(); 
+            } 
         }
     }
      
@@ -85,13 +91,10 @@ class Tren extends Robot implements Runnable, Directions {
         goToIPosition(); //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
             
     }
-
     public void moverActualizandoCoord(){
         int filaAntes = fila; 
         int columnaAntes = columna;  
-        
 
-        
         if (facingNorth()) {
             fila++;
         }
@@ -118,7 +121,23 @@ class Tren extends Robot implements Runnable, Directions {
         
                 
     }
+    public void queHoraEs(){
+        Scanner input = new Scanner(System.in);
 
+        System.out.println("Qué hora es bro?");
+        String hora = input.next(); 
+
+        if (hora.equals("420") || hora.equals("4:20")){
+            tin.son420 = true; 
+            tin.son11 = false;
+        } else if (hora.equals("11") || hora.equals("11:00")){
+            tin.son11 = true; 
+            tin.son420 = false; 
+        } else {
+            System.out.println("La hora no es válida");
+        }
+
+    }
     public void irAN(){
 
         while (columna != 19 || fila != 35 ){
@@ -247,9 +266,11 @@ class Tren extends Robot implements Runnable, Directions {
         }
 
     }
-    public void irASA(){
+    public void rutaASA(){
 
         while(columna != 15 || fila != 14){
+
+            waitBro();
             
             if (columna == 1 && fila == 14){
                 turnLeft(); 
@@ -266,15 +287,45 @@ class Tren extends Robot implements Runnable, Directions {
             if (columna == 14 && fila == 14){
                 turnRight(); 
             }
+
             moverActualizandoCoord(); 
 
         }
         turnLeft();
         turnLeft(); //Debe girar 180 grados porque san antonio no tiene devuelta. 
     }
-    public void rutaA(){
+    public void rutaASJ(){
 
-        while (columna != 19 || fila != 35 && tin.son420 == true){
+        while (columna != 1 || fila != 16){
+
+            waitBro(); 
+            
+            if (columna == 7 && fila == 14){
+                turnRight(); 
+            }
+            if (columna == 7 && fila == 15){
+                turnLeft(); 
+            }
+            if (columna == 2 && fila == 15){
+                turnRight(); 
+            }
+            if (columna == 2 && fila == 17){
+                turnLeft(); 
+            }
+            if (columna == 1 && fila == 17){
+                turnLeft(); 
+            }
+
+
+            moverActualizandoCoord(); 
+
+        }
+    }
+    public void rutaAN(){
+
+        while (columna != 19 || fila != 35){
+
+            waitBro(); 
             
             if (columna == 13 && fila == 1){
                 turnLeft(); 
@@ -324,13 +375,82 @@ class Tren extends Robot implements Runnable, Directions {
             if (columna == 20 && fila == 35){
                 turnLeft(); 
             }
+
             moverActualizandoCoord(); 
 
             //Hasta aquí llega de estrella a niquia, falta code de ruta completa
 
         }
     }
+    public void rutaAE(){
+        while (columna != 11 || fila != 1){
 
+            waitBro(); 
+
+            if (columna == 16 && fila == 35){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 29){
+                turnRight(); 
+            }
+            if (columna == 15 && fila == 29){
+                turnLeft(); 
+            }
+            if (columna == 15 && fila == 26){
+                turnRight(); 
+            }
+            if (columna == 13 && fila == 26){
+                turnLeft(); 
+            }
+            if (columna == 13 && fila == 23){
+                turnRight(); 
+            }
+            if (columna == 11 && fila == 23){
+                turnLeft(); 
+            }
+            if (columna == 11 && fila == 18){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 18){
+                turnRight(); 
+            }
+            if (columna == 16 && fila == 11){
+                turnRight(); 
+            }
+            if (columna == 13 && fila == 11){
+                turnLeft(); 
+            }
+            if (columna == 13 && fila == 5){
+                turnRight(); 
+            }
+            if (columna == 12 && fila == 5){
+                turnLeft(); 
+            }
+            if (columna == 12 && fila == 2){
+                turnRight(); 
+            }
+            if (columna == 10 && fila == 2){
+                turnLeft(); 
+            }
+            if (columna == 10 && fila == 1){
+                turnLeft(); 
+            }
+
+            moverActualizandoCoord();
+
+
+        }
+    }
+    public void waitBro(){
+
+        if(nextToABeeper()){
+            try {
+                    Thread.sleep(3000); // duerme 3 segundos
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
 }
 
 

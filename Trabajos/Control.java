@@ -9,12 +9,11 @@ public class Control implements Directions {
 
     public ArrayList<Tren> metrosA = new ArrayList<>();
     public ArrayList<Tren> metrosB = new ArrayList<>();
-    public int[][] mapa = new int[36][21]; 
-    public boolean son11; 
-    public boolean son420;
+    volatile public int[][] mapa = new int[36][21]; 
+    public boolean son11 = false; 
+    public boolean son420 = false;  
 
     public Control(){
-
     
         int posColumna = 15; //inical 
         int posFila = 34; 
