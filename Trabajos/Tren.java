@@ -38,7 +38,7 @@ class Tren extends Robot implements Runnable, Directions {
     public void goToIPosition(){
 
         if (this.ruta.equals("rutaAN")){
-            irAN(); 
+            irAN();
 
             while(tin.son420 == true || tin.son11 == false){
                 rutaAE();
@@ -56,7 +56,8 @@ class Tren extends Robot implements Runnable, Directions {
         }
         if (this.ruta.equals("rutaASJ")){
             irASJ(); 
-            System.out.println("HOLA3");
+            
+            System.out.print(tin.enTaller.size());
             while(tin.son420 == true || tin.son11 == false){
                 rutaASA(); 
                 rutaASJ(); 
@@ -88,7 +89,12 @@ class Tren extends Robot implements Runnable, Directions {
         
         }
         
-        goToIPosition(); //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
+        tin.block.lock();
+        tin.enTaller.remove(tin.enTaller.getLast());
+        tin.block.unlock(); 
+
+        goToIPosition();
+         //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
             
     }
     public void moverActualizandoCoord(){
@@ -108,16 +114,19 @@ class Tren extends Robot implements Runnable, Directions {
             columna--;
             
         }
+        tin.block.lock(); 
         if (tin.mapa[fila][columna] == 1){ //tin es lo que me permite acceder al mapa que está en control, lo pongo de atributo. 
             fila = filaAntes; 
             columna = columnaAntes; 
         }
+
         else {
             tin.mapa[filaAntes][columnaAntes] = 0; //Desocupa la posición anterior del hp
             tin.mapa[fila][columna] = 1; //Marca la nueva posición del hp como ocupada
             move(); //siempre que movamos el robot con este metodo (moverActualizandoCoord) tendremos las coordenadas del hp 
 
         }
+        tin.block.unlock();
         
                 
     }
@@ -142,16 +151,16 @@ class Tren extends Robot implements Runnable, Directions {
 
         while (columna != 19 || fila != 35 ){
             
-            if (columna == 17 && fila == 32){
+            if (columna == 17 && fila == 32 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 17 && fila == 34){
+            if (columna == 17 && fila == 34 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 20 && fila == 34){
+            if (columna == 20 && fila == 34 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 20 && fila == 35){
+            if (columna == 20 && fila == 35 && !facingWest()){
                 turnLeft(); 
             }
 
@@ -164,52 +173,52 @@ class Tren extends Robot implements Runnable, Directions {
 
         while(columna != 11 || fila != 1 ){
 
-            if (columna == 16 && fila == 32){
+            if (columna == 16 && fila == 32 && !facingSouth()){
                 turnRight(); 
             }
-            if (columna == 16 && fila == 29){
+            if (columna == 16 && fila == 29 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 15 && fila == 29){
+            if (columna == 15 && fila == 29 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 15 && fila == 26){
+            if (columna == 15 && fila == 26 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 13 && fila == 26){
+            if (columna == 13 && fila == 26 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 23){
+            if (columna == 13 && fila == 23 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 11 && fila == 23){
+            if (columna == 11 && fila == 23 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 11 && fila == 18){
+            if (columna == 11 && fila == 18 && !facingEast()){
                 turnLeft(); 
             }
-            if (columna == 16 && fila == 18){
+            if (columna == 16 && fila == 18 && !facingSouth()){
                 turnRight(); 
             }
-            if (columna == 16 && fila == 11){
+            if (columna == 16 && fila == 11 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 13 && fila == 11){
+            if (columna == 13 && fila == 11 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 5){
+            if (columna == 13 && fila == 5 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 12 && fila == 5){
+            if (columna == 12 && fila == 5 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 12 && fila == 2){
+            if (columna == 12 && fila == 2 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 10 && fila == 2){
+            if (columna == 10 && fila == 2 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 10 && fila == 1){
+            if (columna == 10 && fila == 1 && !facingEast()){
                 turnLeft(); 
             }
 
@@ -221,43 +230,43 @@ class Tren extends Robot implements Runnable, Directions {
     public void irASJ(){
         while (columna != 1 || fila != 16 ){
             
-            if (columna == 16 && fila == 32){
+            if (columna == 16 && fila == 32 && !facingSouth()){
                 turnRight(); 
             }
-            if (columna == 16 && fila == 29){
+            if (columna == 16 && fila == 29 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 15 && fila == 29){
+            if (columna == 15 && fila == 29 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 15 && fila == 26){
+            if (columna == 15 && fila == 26 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 13 && fila == 26){
+            if (columna == 13 && fila == 26 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 23){
+            if (columna == 13 && fila == 23 && !facingWest()){
                 turnRight(); 
             }
-            if (columna == 11 && fila == 23){
+            if (columna == 11 && fila == 23 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 11 && fila == 14){
+            if (columna == 11 && fila == 14 && !facingWest()){
                 turnRight();
             }
-            if (columna == 7 && fila == 14){
+            if (columna == 7 && fila == 14 && !facingNorth()){
                 turnRight();
             }
-            if (columna == 7 && fila == 15){
+            if (columna == 7 && fila == 15 && !facingWest()){
                 turnLeft();
             }
-            if (columna == 2 && fila == 15){
+            if (columna == 2 && fila == 15 && !facingNorth()){
                 turnRight();
             }
-            if (columna == 2 && fila == 17){
+            if (columna == 2 && fila == 17 && !facingWest()){
                 turnLeft();
             }
-            if (columna == 1 && fila == 17){
+            if (columna == 1 && fila == 17 && !facingSouth()){
                 turnLeft();
             }
 
@@ -272,19 +281,19 @@ class Tren extends Robot implements Runnable, Directions {
 
             waitBro();
             
-            if (columna == 1 && fila == 14){
+            if (columna == 1 && fila == 14 && !facingEast()){
                 turnLeft(); 
             }
-            if (columna == 6 && fila == 14){
+            if (columna == 6 && fila == 14 && !facingSouth()){
                 turnRight(); 
             }
-            if (columna == 6 && fila == 13){
+            if (columna == 6 && fila == 13 && !facingEast()){
                 turnLeft(); 
             }
-            if (columna == 14 && fila == 13){
+            if (columna == 14 && fila == 13 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 14 && fila == 14){
+            if (columna == 14 && fila == 14 && !facingEast()){
                 turnRight(); 
             }
 
@@ -300,19 +309,19 @@ class Tren extends Robot implements Runnable, Directions {
 
             waitBro(); 
             
-            if (columna == 7 && fila == 14){
+            if (columna == 7 && fila == 14 && !facingNorth()){
                 turnRight(); 
             }
-            if (columna == 7 && fila == 15){
+            if (columna == 7 && fila == 15 && !facingWest()){
                 turnLeft(); 
             }
-            if (columna == 2 && fila == 15){
+            if (columna == 2 && fila == 15 && !facingNorth()){
                 turnRight(); 
             }
-            if (columna == 2 && fila == 17){
+            if (columna == 2 && fila == 17 && !facingWest()){
                 turnLeft(); 
             }
-            if (columna == 1 && fila == 17){
+            if (columna == 1 && fila == 17 && !facingSouth()){
                 turnLeft(); 
             }
 
@@ -327,52 +336,52 @@ class Tren extends Robot implements Runnable, Directions {
 
             waitBro(); 
             
-            if (columna == 13 && fila == 1){
+            if (columna == 13 && fila == 1 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 13 && fila == 4){
+            if (columna == 13 && fila == 4 && !facingEast()){
                 turnRight();
             }
-            if (columna == 14 && fila == 4){
+            if (columna == 14 && fila == 4 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 14 && fila == 10){
+            if (columna == 14 && fila == 10 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 17 && fila == 10){
+            if (columna == 17 && fila == 10 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 17 && fila == 19){
+            if (columna == 17 && fila == 19 && !facingWest()){
                 turnLeft(); 
             }
-            if (columna == 12 && fila == 19){
+            if (columna == 12 && fila == 19 && !facingNorth()){
                 turnRight(); 
             }
-            if (columna == 12 && fila == 22){
+            if (columna == 12 && fila == 22 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 14 && fila == 22){
+            if (columna == 14 && fila == 22 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 14 && fila == 25){
+            if (columna == 14 && fila == 25 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 16 && fila == 25){
+            if (columna == 16 && fila == 25 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 16 && fila == 28){
+            if (columna == 16 && fila == 28 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 17 && fila == 28){
+            if (columna == 17 && fila == 28 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 17 && fila == 34){
+            if (columna == 17 && fila == 34 && !facingEast()){
                 turnRight(); 
             }
-            if (columna == 20 && fila == 34){
+            if (columna == 20 && fila == 34 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 20 && fila == 35){
+            if (columna == 20 && fila == 35 && !facingWest()){
                 turnLeft(); 
             }
 

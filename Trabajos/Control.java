@@ -2,6 +2,7 @@ package Trabajos;
 import java.util.ArrayList;
 import kareltherobot.*;
 import java.awt.Color;
+import java.util.concurrent.locks.ReentrantLock; 
 
 
 
@@ -9,7 +10,9 @@ public class Control implements Directions {
 
     public ArrayList<Tren> metrosA = new ArrayList<>();
     public ArrayList<Tren> metrosB = new ArrayList<>();
-    volatile public int[][] mapa = new int[36][21]; 
+    public ArrayList<Tren> enTaller = new ArrayList<>();
+    public final ReentrantLock block = new ReentrantLock();
+    volatile public int[][] mapa = new int[36][21];  
     public boolean son11 = false; 
     public boolean son420 = false;  
 
@@ -30,17 +33,20 @@ public class Control implements Directions {
             if (contador % 3 == 0){
                 Tren trenB = new Tren(posFila, posColumna, tipoDireccion, 0, Color.GREEN, "rutaASJ", this);
                 metrosB.add(trenB);
+                enTaller.add(trenB); 
                  
 
             }
             else if (contador % 3 == 1){
                 Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAN", this);
                 metrosA.add(trenA);
+                enTaller.add(trenA);
                  
             }
             else if (contador % 3 == 2){
                 Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAE", this);
                 metrosA.add(trenA);
+                enTaller.add(trenA);
                  
             }
             mapa[posFila][posColumna] = 1; //Cada vez que se cree un hp le marca la posición en el mapa coom ocupado 
