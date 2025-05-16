@@ -8,7 +8,6 @@ import java.util.Scanner;
 // Clase personalizada de robot que corre en su propio hilo
 class Tren extends Robot implements Runnable, Directions {
     
-    
     int columna; 
     int fila;
     String ruta; 
@@ -73,13 +72,13 @@ class Tren extends Robot implements Runnable, Directions {
         
         while (columna != 16 || fila != 32 ){
             
-            if (columna == 15 && fila == 35 && !facingEast()){ //El facing dice que se gire el hp si es que ya no está mirando donde debería
+            if (columna == 15 && fila == 35 && !facingWest()){ //El facing dice que se gire el hp si es que ya no está mirando donde debería
                 turnLeft(); 
             }
             if (columna == 1 && fila == 35 && !facingSouth()){
                 turnLeft(); 
             }
-            if (columna == 1 && fila == 34 && !facingWest()){
+            if (columna == 1 && fila == 34 && !facingEast()){
                 turnLeft(); 
             }
             if (columna == 14 && fila == 34 && !facingSouth()){
@@ -120,16 +119,16 @@ class Tren extends Robot implements Runnable, Directions {
         tin.block.lock(); 
         if (tin.mapa[fila][columna] == 1){ //tin es lo que me permite acceder al mapa que está en control, lo pongo de atributo. 
             fila = filaAntes; 
-            columna = columnaAntes; 
+            columna = columnaAntes;
+            tin.block.unlock();
         }
-
         else {
             tin.mapa[filaAntes][columnaAntes] = 0; //Desocupa la posición anterior del hp
             tin.mapa[fila][columna] = 1; //Marca la nueva posición del hp como ocupada
+            tin.block.unlock(); //Se desbloquea antes del move para que no intervenga con la velocidad de los hp
             move(); //siempre que movamos el robot con este metodo (moverActualizandoCoord) tendremos las coordenadas del hp 
 
         }
-        tin.block.unlock();
         
                 
     }
@@ -472,13 +471,3 @@ class Tren extends Robot implements Runnable, Directions {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
