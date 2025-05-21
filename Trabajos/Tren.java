@@ -26,6 +26,7 @@ class Tren extends Robot implements Runnable, Directions {
 
     public void run() {
         salirDelT();
+        entrarAlT(); 
 
     }
     public void turnRight(){
@@ -450,6 +451,7 @@ class Tren extends Robot implements Runnable, Directions {
                 if (tin.enSanancho) {
                     try {
                         tin.condicion.await();  // Espera mientras alguien está en Sanancho
+                        tin.enSanancho = true; // Ocupa el recurso
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt(); // Buena práctica
                     }
@@ -469,5 +471,127 @@ class Tren extends Robot implements Runnable, Directions {
                     tin.blockCisneros.unlock();
             }
         }
+    }
+    public void goBackN(){ //Desde al posición niquia 
+        while (columna != 15 && fila != 33){
+ 
+            if (columna == 16 && fila == 35 && !facingSouth()){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 33 && !facingWest()){
+                turnRight(); 
+            }
+            moverActualizandoCoord();
+            salirDelT();
+
+        }
+    }
+    public void goBackE(){ //Desde al posición Estrella 
+        while (columna != 15 && fila != 33){
+
+            rutaAN(); 
+            if (columna == 16 && fila == 35 && !facingSouth()){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 33 && !facingWest()){
+                turnRight(); 
+            }
+            moverActualizandoCoord();
+            salirDelT();
+
+        }
+    }
+    public void goBackS(){ //Desde al posición SANJACHO
+
+        while(columna != 15 && fila != 33){
+
+            if (columna == 1 && fila == 14 && !facingEast()){
+                turnLeft(); 
+            }
+            if (columna == 6 && fila == 14 && !facingSouth()){
+                turnRight(); 
+            }
+            if (columna == 6 && fila == 13 && !facingEast()){
+                turnLeft(); 
+            }
+            if (columna == 11 && fila == 13 && !facingNorth()){
+                turnLeft(); 
+            }
+            if (columna == 11 && fila == 18 && !facingEast()){
+                turnRight(); 
+            }
+            if (columna == 12 && fila == 18 && !facingNorth()){
+                turnLeft(); 
+            }
+            if (columna == 12 && fila == 22 && !facingEast()){
+                turnRight(); 
+            }
+            if (columna == 14 && fila == 22 && !facingNorth()){
+                turnLeft(); 
+            }
+            if (columna == 14 && fila == 25 && !facingEast()){
+                turnRight(); 
+            }
+            if (columna == 16 && fila == 25 && !facingNorth()){
+                turnLeft(); 
+            }
+            if (columna == 16 && fila == 28 && !facingEast()){
+                turnRight(); 
+            }
+            if (columna == 17 && fila == 28 && !facingNorth()){
+                turnLeft(); 
+            }
+            if (columna == 17 && fila == 3 && !facingWest()){
+                turnLeft(); 
+            }
+
+            moverActualizandoCoord();
+            salirDelT();
+
+
+
+
+
+        }
+    }
+    public void goToFPosition(){
+        
+        while(columna != 15 && fila != 33){
+
+        
+            if (this.ruta.equals("rutaAN")){
+                while (!tin.son11){  
+                }
+                while (tin.son11){
+                    goBackE(); 
+                    
+                }
+        }
+                  if (this.ruta.equals("rutaAE")){
+                while (!tin.son11){  
+                }
+                while (tin.son11){
+                    goBackN(); 
+                    
+                }
+        }
+                  if (this.ruta.equals("rutaASJ")){
+                while (!tin.son11){  
+                }
+                while (tin.son11){
+                    goBackS(); 
+                    
+                }
+        }
+    }
+    
+
+    }
+    public void entrarAlT(){
+
+        if(columna == 11 && fila == 1 || columna == 1 && fila == 15 || columna == 19 && fila == 35){
+            goToFPosition(); 
+        }
+
     }
 }

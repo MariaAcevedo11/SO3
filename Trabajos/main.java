@@ -16,7 +16,7 @@ public static void main(String[] args) {
     Control tin = new Control(); 
     World.setDelay(10); 
      // Crear un nuevo hilo para el robot
-
+    Scanner input = new Scanner(System.in);
     new Thread(tin.metrosA.getLast()).start();
     new Thread(tin.metrosA.get(tin.metrosA.size() - 2)).start(); 
     new Thread(tin.metrosB.getLast()).start();
@@ -24,34 +24,41 @@ public static void main(String[] args) {
     while (!(tin.mapa[35][19] == 1 && tin.mapa[16][1] == 1 && tin.mapa[1][11] == 1)); 
     
     if (tin.mapa[35][19] == 1 && tin.mapa[16][1] == 1 && tin.mapa[1][11] == 1){
-        Scanner input = new Scanner(System.in);
+        
 
         System.out.println("Qué hora es bro?");
         String hora = input.next(); 
 
         if (hora.equals("420") || hora.equals("4:20")){
             tin.son420 = true; 
-            tin.son11 = false;
-        } else if (hora.equals("11") || hora.equals("11:00")){
-            tin.son11 = true; 
-            tin.son420 = false; 
         } else {
             System.out.println("La hora no es válida");
         }
     }
 
-    for (int i = 29; i > 26; i--) {
+
+
+    for (int i = 29; i >= 0; i--) {
 
     new Thread(tin.enTaller.get(i)).start(); //el remove del taller se hace solo, al final de la iteración taller = 0
-
     try {
-        Thread.sleep(15000); // Espera 15 segundos (15,000 milisegundos)
+        Thread.sleep(100); // Espera 15 segundos (15,000 milisegundos)
     } catch (InterruptedException e) {
         Thread.currentThread().interrupt(); // Buena práctica
     }
 }
 
-
+    while(!tin.son11){
     
+        System.out.println("¿Qué hora es bro?"); 
+        String hora2 = input.next(); 
+
+            if (hora2.equals("11") || hora2.equals("11:00")){
+                tin.son11 = true; 
+                tin.son420 = false; 
+            } else {
+                System.out.println("La hora no es valida bro"); 
+            }
+    }
     }
 }
