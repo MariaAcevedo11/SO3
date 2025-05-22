@@ -48,9 +48,16 @@ public static void main(String[] args) {
     }
 }
 
-    while(!tin.son11){
+
+    /*try {
+        Thread.sleep(5000); // Espera 20 segundos (15,000 milisegundos)
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt(); // Buena práctica
+    }
+    tin.son11 = true;
+    tin.son420 = false; */
     
-        System.out.println("¿Qué hora es bro?"); 
+        /*System.out.println("¿Qué hora es bro?"); 
         String hora2 = input.next(); 
 
             if (hora2.equals("11") || hora2.equals("11:00")){
@@ -58,7 +65,7 @@ public static void main(String[] args) {
                 tin.son420 = false; 
             } else {
                 System.out.println("La hora no es valida bro"); 
-            }
-    }
+            } */
+    
     }
 }

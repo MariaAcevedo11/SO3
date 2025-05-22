@@ -17,9 +17,11 @@ public class Control implements Directions {
 
     public final ReentrantLock blockCisneros = new ReentrantLock(); //pa cisneros 
     public final Condition condicion = blockCisneros.newCondition();
+    public final ReentrantLock blockD = new ReentrantLock();
     volatile public int[][] mapa = new int[36][21];  
     volatile public boolean son11 = false; 
     volatile public boolean son420 = false; 
+    volatile public boolean pausarTrenes = false;
     volatile public boolean enSanancho = false;  
 
     public Control(){
@@ -40,6 +42,7 @@ public class Control implements Directions {
                 Tren trenB = new Tren(posFila, posColumna, tipoDireccion, 0, Color.GREEN, "rutaASJ", this);
                 metrosB.add(trenB);
                 enTaller.add(trenB); 
+                
                  
 
             }

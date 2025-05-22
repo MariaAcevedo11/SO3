@@ -8,8 +8,8 @@ import java.util.Scanner;
 // Clase personalizada de robot que corre en su propio hilo
 class Tren extends Robot implements Runnable, Directions {
     
-    int columna; 
-    int fila;
+    volatile int columna; 
+    volatile int fila;
     String ruta; 
     Control tin; 
     
@@ -23,10 +23,10 @@ class Tren extends Robot implements Runnable, Directions {
 
         World.setupThread(this);
     }
+    
 
     public void run() {
         salirDelT();
-        entrarAlT(); 
 
     }
     public void turnRight(){
@@ -34,7 +34,6 @@ class Tren extends Robot implements Runnable, Directions {
         turnLeft(); 
         turnLeft();
     }
-
     public void goToIPosition(){
 
         if (this.ruta.equals("rutaAN")){
@@ -46,6 +45,10 @@ class Tren extends Robot implements Runnable, Directions {
                     rutaAE();
                     rutaAN(); 
                 }
+                while(tin.son11){
+                    System.out.println("ACA ESTO JAJAJAJAJ");
+                    goToFPosition(); 
+                }
         }
 
         if (this.ruta.equals("rutaAE")){
@@ -54,8 +57,16 @@ class Tren extends Robot implements Runnable, Directions {
                 }
 
                 while(tin.son420){
-                    rutaAN(); 
+                    rutaAN();
+                    if(tin.son11){
+                        break;
+                    } 
+                    
                     rutaAE();
+                }
+                while(tin.son11){
+                    System.out.println("ACA ESTO JAJAJAJAJ111");
+                    goToFPosition(); 
                 }
         }
         if (this.ruta.equals("rutaASJ")){
@@ -66,14 +77,18 @@ class Tren extends Robot implements Runnable, Directions {
                     rutaASA();
                     rutaASJ();
                 }
+                while(tin.son11){
+                    goToFPosition(); 
+                    System.out.println("ACA ESTO JAJAJAJAJ111");
+                }
  
         }
     }
     public void salirDelT(){ //avenida = columna, calle = fila
         
-        while (columna != 16 || fila != 32 ){
-            
-            if (columna == 15 && fila == 35 && !facingWest()){ //El facing dice que se gire el hp si es que ya no está mirando donde debería
+        while (columna != 16 || fila != 32){
+
+            if (columna == 15 && fila == 35 && !facingWest()){
                 turnLeft(); 
             }
             if (columna == 1 && fila == 35 && !facingSouth()){
@@ -89,8 +104,7 @@ class Tren extends Robot implements Runnable, Directions {
                 turnLeft(); 
             }  
             moverActualizandoCoord();
-        
-        }
+    }
         
         tin.block.lock();
         tin.enTaller.remove(tin.enTaller.getLast());
@@ -100,8 +114,8 @@ class Tren extends Robot implements Runnable, Directions {
          //LLama esta funcion para que cuando terminen de salir del taller se vayan a sus pos iniciales
             
     }
-    public void moverActualizandoCoord(){
-        int filaAntes = fila; 
+    public void moverActualizandoCoord() {
+         int filaAntes = fila; 
         int columnaAntes = columna;  
 
         if (facingNorth()) {
@@ -130,13 +144,11 @@ class Tren extends Robot implements Runnable, Directions {
             move(); //siempre que movamos el robot con este metodo (moverActualizandoCoord) tendremos las coordenadas del hp 
 
         }
-        
-                
     }
     public void irAN(){
 
-        while (columna != 19 || fila != 35 ){
-            
+       while (columna != 19 || fila != 35){
+
             if (columna == 17 && fila == 32 && !facingNorth()){
                 turnLeft(); 
             }
@@ -209,13 +221,12 @@ class Tren extends Robot implements Runnable, Directions {
             }
 
             moverActualizandoCoord();
-
-        }
+}
 
     }
     public void irASJ(){
         while (columna != 1 || fila != 16 ){
-            
+
             if (columna == 16 && fila == 32 && !facingSouth()){
                 turnRight(); 
             }
@@ -257,13 +268,12 @@ class Tren extends Robot implements Runnable, Directions {
             }
 
             moverActualizandoCoord();
-
         }
 
     }
     public void rutaASA(){
 
-        while(columna != 15 || fila != 14){
+       while(columna != 15 || fila != 14){
 
             waitBro();
             
@@ -286,6 +296,7 @@ class Tren extends Robot implements Runnable, Directions {
             moverActualizandoCoord(); 
 
         }
+
         turnLeft();
         turnLeft(); //Debe girar 180 grados porque san antonio no tiene devuelta. 
     }
@@ -311,9 +322,7 @@ class Tren extends Robot implements Runnable, Directions {
                 turnLeft(); 
             }
 
-
             moverActualizandoCoord(); 
-
         }
     }
     public void rutaAN(){
@@ -376,6 +385,7 @@ class Tren extends Robot implements Runnable, Directions {
             //Hasta aquí llega de estrella a niquia, falta code de ruta completa
 
         }
+
     }
     public void rutaAE(){
         while (columna != 11 || fila != 1){
@@ -433,19 +443,21 @@ class Tren extends Robot implements Runnable, Directions {
 
             moverActualizandoCoord();
 
-
         }
+
+
     }
     public void waitBro(){
 
         if(nextToABeeper()){
             try {
-                    Thread.sleep(3000); // duerme 3 segundos
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Thread.sleep(2000); // duerme 2 segundos (3000 - 1000)
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-       if (columna == 12 && fila == 13) {
+
+        if (columna == 12 && fila == 13) {
             tin.blockCisneros.lock();
             try {
                 if (tin.enSanancho) {
@@ -462,13 +474,14 @@ class Tren extends Robot implements Runnable, Directions {
                 tin.blockCisneros.unlock(); // Siempre liberar el lock
             }
         }
+
         if (columna == 15 && fila == 14){
-                tin.blockCisneros.lock();
-                try {
-                    tin.enSanancho = false;     // Libera el recurso
-                    tin.condicion.signal();     // Despierta a un hilo esperando
-                } finally {
-                    tin.blockCisneros.unlock();
+            tin.blockCisneros.lock();
+            try {
+                tin.enSanancho = false;     // Libera el recurso
+                tin.condicion.signal();     // Despierta a un hilo esperando
+            } finally {
+                tin.blockCisneros.unlock();
             }
         }
     }
@@ -482,7 +495,7 @@ class Tren extends Robot implements Runnable, Directions {
                 turnRight(); 
             }
             moverActualizandoCoord();
-            salirDelT();
+            //salirDelT();
 
         }
     }
@@ -497,16 +510,16 @@ class Tren extends Robot implements Runnable, Directions {
                 turnRight(); 
             }
             moverActualizandoCoord();
-            salirDelT();
+            //salirDelT();
 
         }
     }
     public void goBackS(){ //Desde al posición SANJACHO
 
-        while(columna != 15 && fila != 33){
+        while (columna != 15 && fila != 33){
 
             if (columna == 1 && fila == 14 && !facingEast()){
-                turnLeft(); 
+                turnLeft();  
             }
             if (columna == 6 && fila == 14 && !facingSouth()){
                 turnRight(); 
@@ -541,57 +554,39 @@ class Tren extends Robot implements Runnable, Directions {
             if (columna == 17 && fila == 28 && !facingNorth()){
                 turnLeft(); 
             }
-            if (columna == 17 && fila == 3 && !facingWest()){
+            if (columna == 17 && fila == 33 && !facingWest()){
                 turnLeft(); 
             }
 
             moverActualizandoCoord();
-            salirDelT();
-
-
-
-
 
         }
+
     }
     public void goToFPosition(){
         
         while(columna != 15 && fila != 33){
-
+            
         
             if (this.ruta.equals("rutaAN")){
-                while (!tin.son11){  
-                }
+                
                 while (tin.son11){
-                    goBackE(); 
-                    
+                    goBackE();  
                 }
-        }
-                  if (this.ruta.equals("rutaAE")){
-                while (!tin.son11){  
-                }
+            }
+            if (this.ruta.equals("rutaAE")){
+               
                 while (tin.son11){
-                    goBackN(); 
-                    
+                    goBackN();    
                 }
-        }
-                  if (this.ruta.equals("rutaASJ")){
-                while (!tin.son11){  
-                }
+            }
+            if (this.ruta.equals("rutaASJ")){
+                
                 while (tin.son11){
-                    goBackS(); 
-                    
+                    goBackS();         
                 }
-        }
+            }
     }
-    
-
-    }
-    public void entrarAlT(){
-
-        if(columna == 11 && fila == 1 || columna == 1 && fila == 15 || columna == 19 && fila == 35){
-            goToFPosition(); 
-        }
 
     }
 }
