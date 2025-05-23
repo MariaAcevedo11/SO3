@@ -52,7 +52,7 @@ public static void main(String[] args) {
 
 
 
-    for (int i = 29; i >= 0; i--) {
+    for (int i = 28; i >= 0; i--) {
 
         new Thread(tin.enTaller.get(i)).start(); //el remove del taller se hace solo, al final de la iteración taller = 0
         try {
