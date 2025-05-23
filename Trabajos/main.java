@@ -18,7 +18,7 @@ public static void main(String[] args) {
     System.setOut(new FilteredPrintStream(originalOut));
     Control tin = new Control();
     
-    World.setDelay(20); 
+    World.setDelay(10); 
      // Crear un nuevo hilo para el robot
     Scanner input = new Scanner(System.in);
     new Thread(tin.metrosA.getLast()).start();
@@ -62,14 +62,27 @@ public static void main(String[] args) {
         }
     }
 
+    ArrayList<Tren> trenes = tin.getTrenes(); 
+            for (Tren tren : trenes){
+                System.out.println(tren.isSon420() + "son420");
+            } 
+
+
     //if ultimotren ya pasó por NIQUIA entonces solo ahí pregunta 
     System.out.println("¿Bro, son las 11 PM? (sí/no)");
     String respuesta = input.next().toLowerCase();
 
     if (respuesta.equals("sí") || respuesta.equals("si") || respuesta.equals("11")) {
         tin.son11 = true;  
+
+            for (Tren tren : trenes){
+                System.out.println(tren.isSon420() + "son420");
+            } 
+
         
-        if (tin.son11 && (tin.mapa[16][1] == 1 || tin.mapa[1][11] == 1 || tin.mapa[35][19] == 1) ){
+
+
+     /* if (tin.son11 && (tin.mapa[16][1] == 1 || tin.mapa[1][11] == 1 || tin.mapa[35][19] == 1) ){
         while(true){
 
             ArrayList<Tren> trenes = tin.getTrenes(); 
@@ -82,7 +95,7 @@ public static void main(String[] args) {
                 
             }
         }
-    }
+    } */
     
 
         //System.out.println(tin.son11 + "main"); SI SE PONE TRUE PERO NO ACTUALIZA LA HPTA

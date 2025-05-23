@@ -92,7 +92,7 @@ public class Tren extends Robot implements Runnable, Directions {
  
         }
 
-        while(tin.son11){   
+        while(tin.son11 && !son420){   
             goToFPosition(); 
             }
         
@@ -130,7 +130,8 @@ public class Tren extends Robot implements Runnable, Directions {
     }
     public void moverActualizandoCoord() {
         int filaAntes = fila; 
-        int columnaAntes = columna;  
+        int columnaAntes = columna;
+        
 
         if (facingNorth()) {
             fila++;
@@ -144,8 +145,24 @@ public class Tren extends Robot implements Runnable, Directions {
         else if (facingWest()) {
             columna--;
             
-        }
+        } 
+
+        int filaactual = fila; 
+        int columnaactual = columna; 
+       
+
+        //pregunto ESTOY EN EL EXTREMO???? si sí, verifico si son las 11 y si sí, cambio son420 a false para q no entre al while y se vyaa directamente a fposition.
+                if (tin.son11){
+                    if ((columnaactual == 1 && filaactual == 16) || (columnaactual == 11 && filaactual == 1) || (columnaactual == 19 && filaactual == 35)){
+                        setSon420(false);
+                    } else {
+                        System.out.println("son las 11 pero no estoy en el extremo");
+                    }
+                } else {
+                    System.out.println("no son las 11");}
         tin.block.lock(); 
+
+
         if (tin.mapa[fila][columna] == 1){ //tin es lo que me permite acceder al mapa que está en control, lo pongo de atributo. 
             fila = filaAntes; 
             columna = columnaAntes;
