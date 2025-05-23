@@ -8,8 +8,8 @@ import java.util.Scanner;
 // Clase personalizada de robot que corre en su propio hilo
 public class Tren extends Robot implements Runnable, Directions {
     
-    volatile int columna; 
-    volatile int fila;
+    volatile public int columna; 
+    volatile public int fila;
     String ruta; 
     Control tin; 
     volatile boolean son420; 
@@ -49,6 +49,7 @@ public class Tren extends Robot implements Runnable, Directions {
     public void goToIPosition(){
 
         if (this.ruta.equals("rutaAN")){
+            
             irAN();
                 while (!isSon420()){  
                 }

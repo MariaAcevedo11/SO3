@@ -32,21 +32,21 @@ public class Control implements Directions {
         int posColumna = 15; //inical 
         int posFila = 34; 
         Direction tipoDireccion = Directions.North;
-        int contador = 0; 
+        int contador = 1; 
          
         
 
         //Creación de robots con tipo de dirección respectivo en el taller
 
         //Aquí los creo teniendo en cuenta que ciertos van a tener ruta tin y otros ruta tan y los guardo respectivamente cambiando el string ruta
-        while (metrosA.size() < 22 || metrosB.size() < 10){
+        while (contador <= 32 ){
 
             if (contador % 3 == 0){
+                
                 Tren trenB = new Tren(posFila, posColumna, tipoDireccion, 0, Color.GREEN, "rutaASJ", this, false);
                 metrosB.add(trenB);
                 enTaller.add(trenB); 
                 trenes.add(trenB); 
-                 
                 
                  
 

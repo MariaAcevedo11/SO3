@@ -18,7 +18,7 @@ public static void main(String[] args) {
     System.setOut(new FilteredPrintStream(originalOut));
     Control tin = new Control();
     
-    World.setDelay(10); 
+    World.setDelay(20); 
      // Crear un nuevo hilo para el robot
     Scanner input = new Scanner(System.in);
     new Thread(tin.metrosA.getLast()).start();
@@ -52,7 +52,7 @@ public static void main(String[] args) {
 
 
 
-    for (int i = 29; i >= 0; i--) {
+    for (int i = 28; i >= 0; i--) {
 
         new Thread(tin.enTaller.get(i)).start(); //el remove del taller se hace solo, al final de la iteración taller = 0
         try {
@@ -62,20 +62,27 @@ public static void main(String[] args) {
         }
     }
 
-    
+    //if ultimotren ya pasó por NIQUIA entonces solo ahí pregunta 
     System.out.println("¿Bro, son las 11 PM? (sí/no)");
     String respuesta = input.next().toLowerCase();
 
     if (respuesta.equals("sí") || respuesta.equals("si") || respuesta.equals("11")) {
         tin.son11 = true;  
+        
+        if (tin.son11 && (tin.mapa[16][1] == 1 || tin.mapa[1][11] == 1 || tin.mapa[35][19] == 1) ){
+        while(true){
 
-        if (tin.son11 && (tin.mapa[15][1] == 1 || tin.mapa[11][1] == 1 || tin.mapa[19][35] == 1) ){
-             
             ArrayList<Tren> trenes = tin.getTrenes(); 
             for (Tren tren : trenes){
-                tren.setSon420(false);
+                if ((tren.columna == 1 && tren.fila == 16) || (tren.columna == 11 && tren.fila == 1) || (tren.columna == 20 && tren.fila == 35)){
+                    tren.setSon420(false);
+                } else {
+
+                }
+                
             }
         }
+    }
     
 
         //System.out.println(tin.son11 + "main"); SI SE PONE TRUE PERO NO ACTUALIZA LA HPTA
