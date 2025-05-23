@@ -13,6 +13,7 @@ public class Control implements Directions {
     public ArrayList<Tren> metrosA = new ArrayList<>();
     public ArrayList<Tren> metrosB = new ArrayList<>();
     public ArrayList<Tren> enTaller = new ArrayList<>();
+    public ArrayList<Tren> trenes = new ArrayList<>();
     public final ReentrantLock block = new ReentrantLock(); //pa moverse
 
     public final ReentrantLock blockCisneros = new ReentrantLock(); //pa cisneros 
@@ -20,11 +21,11 @@ public class Control implements Directions {
     public final ReentrantLock blockD = new ReentrantLock();
     public final Condition condicionBlockD = blockD.newCondition();
     volatile public int[][] mapa = new int[36][21];  
-    volatile public boolean son11 = false; 
-    volatile public boolean son420 = false; 
+    volatile public boolean son11 = false;  
     volatile public boolean enSanancho = false;  
     volatile public boolean enFrente1 = false; 
     volatile public boolean enFrente2 = false; 
+    
 
     public Control(){
     
@@ -41,23 +42,26 @@ public class Control implements Directions {
         while (metrosA.size() < 22 || metrosB.size() < 10){
 
             if (contador % 3 == 0){
-                Tren trenB = new Tren(posFila, posColumna, tipoDireccion, 0, Color.GREEN, "rutaASJ", this);
+                Tren trenB = new Tren(posFila, posColumna, tipoDireccion, 0, Color.GREEN, "rutaASJ", this, false);
                 metrosB.add(trenB);
                 enTaller.add(trenB); 
+                trenes.add(trenB); 
                 
                  
 
             }
             else if (contador % 3 == 1){
-                Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAN", this);
+                Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAN", this, false);
                 metrosA.add(trenA);
                 enTaller.add(trenA);
+                trenes.add(trenA); 
                  
             }
             else if (contador % 3 == 2){
-                Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAE", this);
+                Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAE", this, false);
                 metrosA.add(trenA);
                 enTaller.add(trenA);
+                trenes.add(trenA); 
                  
             }
             mapa[posFila][posColumna] = 1; //Cada vez que se cree un hp le marca la posición en el mapa coom ocupado 
@@ -99,6 +103,10 @@ public class Control implements Directions {
         }
 
         
+    }
+
+    public ArrayList<Tren> getTrenes(){
+        return trenes; 
     }
     
 }

@@ -12,19 +12,31 @@ class Tren extends Robot implements Runnable, Directions {
     volatile int fila;
     String ruta; 
     Control tin; 
-    
+    volatile boolean son420; 
 
-    public Tren(int street, int avenue, Direction direction, int beeps, Color color, String ruta, Control tin) {
+    public Tren(int street, int avenue, Direction direction, int beeps, Color color, String ruta, Control tin, boolean son420) {
         super(street, avenue, direction, beeps, color);
         this.columna = avenue; 
         this.fila = street;
         this.ruta = ruta; 
         this.tin = tin; 
+        this.son420 = son420; 
 
         World.setupThread(this);
     }
-    
 
+
+    
+    public boolean isSon420() {
+        return son420;
+    }
+
+    public void setSon420(boolean son420) {
+        this.son420 = son420;
+    }
+    public String getRuta(){
+        return ruta; 
+    }
     public void run() {
         salirDelT();
 
@@ -38,9 +50,9 @@ class Tren extends Robot implements Runnable, Directions {
 
         if (this.ruta.equals("rutaAN")){
             irAN();
-                while (!tin.son420){  
+                while (!isSon420()){  
                 }
-                while (tin.son420){
+                while (isSon420()){
 
                     rutaAE();
                     if (tin.son11){
@@ -48,46 +60,52 @@ class Tren extends Robot implements Runnable, Directions {
                     }
                     rutaAN(); 
                 }
-                while(tin.son11){
+                /*while(tin.son11){
                     
-                    //System.out.println("RUTA A NIQUIA"); //SI ENTRAAAAAAAAAAAAAA
                     goToFPosition(); 
-                }
+                }*/
         }
 
         if (this.ruta.equals("rutaAE")){
             irAE();
-                while (!tin.son420){  
+                while (!isSon420()){  
                 }
 
-                while(tin.son420){
+                while(isSon420()){
                     rutaAN();
                     if (tin.son11){
                         break;
                     }
                     rutaAE();
                 }
-                while(tin.son11){
+                /*while(tin.son11){
                     
                     
                     goToFPosition(); 
-                }
+                } */
         }
         if (this.ruta.equals("rutaASJ")){
             irASJ(); 
-                while (!tin.son420){  
+                while (!isSon420()){  
                 }
-                while(tin.son420){ 
+                while(isSon420()){ 
                     rutaASA();
+                    
                     rutaASJ();
+                    if (tin.son11){
+                        break; 
+                    }
                 }
-                while(tin.son11){
+                /*while(tin.son11){
                     
                     goToFPosition(); 
                     
-                }
+                }*/
  
         }
+        while(tin.son11){   
+            goToFPosition(); 
+                }
     }
     public void salirDelT(){ //avenida = columna, calle = fila
         
@@ -459,7 +477,7 @@ class Tren extends Robot implements Runnable, Directions {
 
         if(nextToABeeper()){
             try {
-                Thread.sleep(2000); // duerme 2 segundos (3000 - 1000)
+                Thread.sleep(3000); // duerme 2 segundos (3000 - 1000)
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -636,6 +654,7 @@ class Tren extends Robot implements Runnable, Directions {
             
             if (columna == 11 && fila == 1){
                 System.out.println("ENTRAAAAAAAAAAAAAAA Y SALE");
+                System.out.println(getRuta()); 
                 vuelve();  
                 System.out.println("si lo coge 1 ");
                 

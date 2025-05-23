@@ -1,3 +1,4 @@
+package Trabajos;
 import Trabajos.Control;
 import kareltherobot.*;
 import java.awt.Color;
@@ -5,8 +6,9 @@ import java.io.PrintStream;
 import Trabajos.FilteredPrintStream;
 import java.util.ArrayList;
 import java.util.Scanner; 
+import Trabajos.Tren; 
 
-public class main { 
+public class main{ 
 public static void main(String[] args) {
     World.readWorld("MetroMed.kwld");
     World.setVisible(true); 
@@ -14,7 +16,8 @@ public static void main(String[] args) {
     
     PrintStream originalOut = System.out;
     System.setOut(new FilteredPrintStream(originalOut));
-    Control tin = new Control(); 
+    Control tin = new Control();
+    
     World.setDelay(10); 
      // Crear un nuevo hilo para el robot
     Scanner input = new Scanner(System.in);
@@ -31,7 +34,16 @@ public static void main(String[] args) {
         String hora = input.next(); 
 
         if (hora.equals("420") || hora.equals("4:20")){
-            tin.son420 = true; 
+            ArrayList<Tren> listaTrenes = tin.getTrenes();
+
+            for (int i = 0; i < listaTrenes.size(); i++) {
+                Tren trenActual = listaTrenes.get(i);
+                // 4. Verificar que el tren no es null (evita NullPointerException)
+                    trenActual.setSon420(true);
+                    
+                
+            }
+            System.out.println("LOS PUSO TRUE"); 
             tin.son11 = false; 
         } else {
             System.out.println("La hora no es válida");
@@ -55,8 +67,17 @@ public static void main(String[] args) {
     String respuesta = input.next().toLowerCase();
 
     if (respuesta.equals("sí") || respuesta.equals("si") || respuesta.equals("11")) {
-        tin.son11 = true;
-        tin.son420 = false;
+        tin.son11 = true; 
+        System.out.println("HASTA AQUí"); 
+        if ((tin.mapa[1][15] == 1 || tin.mapa[11][1] == 1 || tin.mapa[19][35] == 1) && tin.son11){
+            ArrayList<Tren> trenes = tin.getTrenes(); 
+            for (Tren tren : trenes){
+                System.out.println(tren.isSon420() + "  SON 420");
+                System.out.println(tin.son11 + "   SON 1111111"); 
+                tren.setSon420(false);
+            }
+        }
+
         //System.out.println(tin.son11 + "main"); SI SE PONE TRUE PERO NO ACTUALIZA LA HPTA
         //System.out.println("Son las 11 PM. Los trenes se devuelven al taller.");
     } else {
