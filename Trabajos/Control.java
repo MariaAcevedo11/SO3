@@ -18,11 +18,13 @@ public class Control implements Directions {
     public final ReentrantLock blockCisneros = new ReentrantLock(); //pa cisneros 
     public final Condition condicion = blockCisneros.newCondition();
     public final ReentrantLock blockD = new ReentrantLock();
+    public final Condition condicionBlockD = blockD.newCondition();
     volatile public int[][] mapa = new int[36][21];  
     volatile public boolean son11 = false; 
     volatile public boolean son420 = false; 
-    volatile public boolean pausarTrenes = false;
     volatile public boolean enSanancho = false;  
+    volatile public boolean enFrente1 = false; 
+    volatile public boolean enFrente2 = false; 
 
     public Control(){
     
