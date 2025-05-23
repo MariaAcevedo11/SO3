@@ -6,7 +6,7 @@ import java.util.Scanner;
  
 
 // Clase personalizada de robot que corre en su propio hilo
-class Tren extends Robot implements Runnable, Directions {
+public class Tren extends Robot implements Runnable, Directions {
     
     volatile int columna; 
     volatile int fila;
@@ -60,10 +60,6 @@ class Tren extends Robot implements Runnable, Directions {
                     }
                     rutaAN(); 
                 }
-                /*while(tin.son11){
-                    
-                    goToFPosition(); 
-                }*/
         }
 
         if (this.ruta.equals("rutaAE")){
@@ -78,11 +74,6 @@ class Tren extends Robot implements Runnable, Directions {
                     }
                     rutaAE();
                 }
-                /*while(tin.son11){
-                    
-                    
-                    goToFPosition(); 
-                } */
         }
         if (this.ruta.equals("rutaASJ")){
             irASJ(); 
@@ -96,16 +87,14 @@ class Tren extends Robot implements Runnable, Directions {
                         break; 
                     }
                 }
-                /*while(tin.son11){
-                    
-                    goToFPosition(); 
-                    
-                }*/
+
  
         }
+
         while(tin.son11){   
             goToFPosition(); 
-                }
+            }
+        
     }
     public void salirDelT(){ //avenida = columna, calle = fila
         
@@ -511,7 +500,7 @@ class Tren extends Robot implements Runnable, Directions {
             }
         }
     }
-    public void goBackN(){ //Desde al posición niquia 
+    public void vuelveN(){ //Desde al posición niquia 
         while (columna != 15 || fila != 33 ){
  
             //System.out.println("WHILE GO BACK N"); FUNCIONAAAA
@@ -525,7 +514,7 @@ class Tren extends Robot implements Runnable, Directions {
 
         }
     }
-    public void vuelve(){ //Desde al posición Estrella 
+    public void vuelveE(){ //Desde al posición Estrella 
         while(columna != 15 || fila != 33){
 
             if (columna == 13 && fila == 1 && !facingNorth()){
@@ -586,7 +575,7 @@ class Tren extends Robot implements Runnable, Directions {
         }
         
     }
-    public void goBackS(){ //Desde al posición SANJACHO
+    public void vuelveS(){ //Desde al posición SANJACHO
 
         while (columna != 15 || fila != 33){
             //System.out.println("WHILE GO BACK "); FUNCIONA :DDDDDD
@@ -653,19 +642,20 @@ class Tren extends Robot implements Runnable, Directions {
         while(columna != 15 || fila != 33 ){
             
             if (columna == 11 && fila == 1){
-                System.out.println("ENTRAAAAAAAAAAAAAAA Y SALE");
-                System.out.println(getRuta()); 
-                vuelve();  
+                System.out.println(getRuta() + "GOBACKE"); 
+                vuelveE();  
                 System.out.println("si lo coge 1 ");
                 
             }
             if (columna == 19 && fila == 35){
-                    goBackN();    
+                System.out.println(getRuta() + "GOBACKN");
+                    vuelveN();    
                     System.out.println("si lo coge 2 "); 
                 
             }
             if (columna == 1 && fila == 16){
-                    goBackS(); 
+                System.out.println(getRuta() + "GOBACKS");
+                    vuelveS(); 
                     System.out.println("si lo coge 3 ");        
             }
 

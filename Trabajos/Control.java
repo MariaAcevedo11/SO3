@@ -46,6 +46,7 @@ public class Control implements Directions {
                 metrosB.add(trenB);
                 enTaller.add(trenB); 
                 trenes.add(trenB); 
+                 
                 
                  
 
@@ -54,7 +55,8 @@ public class Control implements Directions {
                 Tren trenA = new Tren(posFila, posColumna, tipoDireccion, 0, Color.BLUE, "rutaAN", this, false);
                 metrosA.add(trenA);
                 enTaller.add(trenA);
-                trenes.add(trenA); 
+                trenes.add(trenA);
+                
                  
             }
             else if (contador % 3 == 2){
@@ -62,6 +64,7 @@ public class Control implements Directions {
                 metrosA.add(trenA);
                 enTaller.add(trenA);
                 trenes.add(trenA); 
+                
                  
             }
             mapa[posFila][posColumna] = 1; //Cada vez que se cree un hp le marca la posición en el mapa coom ocupado 

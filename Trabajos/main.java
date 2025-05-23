@@ -67,16 +67,16 @@ public static void main(String[] args) {
     String respuesta = input.next().toLowerCase();
 
     if (respuesta.equals("sí") || respuesta.equals("si") || respuesta.equals("11")) {
-        tin.son11 = true; 
-        System.out.println("HASTA AQUí"); 
-        if ((tin.mapa[1][15] == 1 || tin.mapa[11][1] == 1 || tin.mapa[19][35] == 1) && tin.son11){
+        tin.son11 = true;  
+
+        if (tin.son11 && (tin.mapa[15][1] == 1 || tin.mapa[11][1] == 1 || tin.mapa[19][35] == 1) ){
+             
             ArrayList<Tren> trenes = tin.getTrenes(); 
             for (Tren tren : trenes){
-                System.out.println(tren.isSon420() + "  SON 420");
-                System.out.println(tin.son11 + "   SON 1111111"); 
                 tren.setSon420(false);
             }
         }
+    
 
         //System.out.println(tin.son11 + "main"); SI SE PONE TRUE PERO NO ACTUALIZA LA HPTA
         //System.out.println("Son las 11 PM. Los trenes se devuelven al taller.");
